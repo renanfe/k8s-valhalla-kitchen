@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-valhalla-kitchen-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: api-valhalla-kitchen
+  template:
+    metadata:
+      labels:
+        app: api-valhalla-kitchen
+    spec:
+      containers:
+        - name: api-valhalla-kitchen-container
+          image: renanfee/api-valhalla-kitchen
+          ports:
+            - containerPort: 8080
+          env:
+            - name: POSTGRES_DB
+              value: valhalla_kitchen
+            - name: POSTGRES_HOST
+              value: db-valhalla-kitchen-service
+            - name: POSTGRES_PORT
+              value: '5432'
+            - name: POSTGRES_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: api-valhalla-kitchen-secrets
+                  key: POSTGRES_USERNAME      
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: api-valhalla-kitchen-secrets
+                  key: POSTGRES_PASSWORD
+          resources:
+            requests:
+              memory: 120Mi
+              cpu: 300m
+            limits:
+              memory: 200Mi
+              cpu: 750m

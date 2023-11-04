@@ -1,4 +1,4 @@
-terraform/.terraform/*
-terraform/*.hcl
-terraform/*.tfstate
-terraform/*.backup
+AWS-Commands.yml
+.terraform/*
+.terraform*
+terraform*

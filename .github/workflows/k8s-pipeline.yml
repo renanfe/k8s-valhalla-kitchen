@@ -5,6 +5,12 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+env:
+  AWS_REGION: us-east-1                       # set this to your preferred AWS region, e.g. us-west-1
+  ECR_REPOSITORY: api-valhalla-kitchen        # set this to your Amazon ECR repository name
+  ECS_CLUSTER: cluster-valhalla-kitchen       # set this to your Amazon ECS cluster name                                              # file, e.g. .aws/task-definition.json
+  CONTAINER_NAME: api-valhalla-kitchen        # set this to the name of the container in the
+                                              
 
 jobs:
   build:
@@ -19,7 +25,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: arn:aws:iam::075131957861:role/github-role
-          aws-region: eu-west-1  
+          aws-region: eu-east-1  
 
       - name: Checkout
         uses: actions/checkout@v3
@@ -43,36 +49,6 @@ jobs:
         run: terraform plan -no-color -input=false
         continue-on-error: true
 
-      - name: Update Pull Request
-        uses: actions/github-script@v6
-        if: github.event_name == 'pull_request'
-        env:
-          PLAN: ${{ steps.plan.outputs.stdout }}
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
-            #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
-            #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
-            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
-
-            <details><summary>Show Plan</summary>
-
-            \`\`\`terraform\n
-            ${process.env.PLAN}
-            \`\`\`
-
-            </details>
-
-            *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
-
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: output
-            })
-
       - name: Terraform Plan Status
         if: steps.plan.outcome == 'failure'
         run: exit 1
@@ -80,3 +56,5 @@ jobs:
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve -input=false
+        continue-on-error: true
+

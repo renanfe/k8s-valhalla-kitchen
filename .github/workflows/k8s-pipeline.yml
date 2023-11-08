@@ -100,9 +100,9 @@ jobs:
           kubectl apply -f ./k8s
           kubectl get nodes
           kubectl get deployments -A
-      #  continue-on-error: true     
+        continue-on-error: true     
 
-      # - name: Terraform Destroy
-      #   run: terraform destroy -auto-approve
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve
 
 

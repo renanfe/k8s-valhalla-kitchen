@@ -68,9 +68,9 @@ jobs:
       #   run: terraform apply -auto-approve -input=false
       #   continue-on-error: true
 
-      # - name: Login to Amazon ECR
-      #   id: login-ecr-aws
-      #   uses: aws-actions/amazon-ecr-login@v1
+      - name: Login to Amazon ECR
+        id: login-ecr-aws
+        uses: aws-actions/amazon-ecr-login@v1
 
       # - name: Create ECR repository
       #   env:

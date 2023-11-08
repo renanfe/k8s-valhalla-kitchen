@@ -22,7 +22,10 @@ jobs:
       contents: read
     steps:
       - name: Install kubectl
-        uses: azure/setup-kubectl@v2.0
+        uses: azure/setup-kubectl@v3
+        with:
+          version: latest
+        id: install
 
       - name: Configure aws credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -82,8 +85,12 @@ jobs:
     
       - name: Update kube config
         run: aws eks update-kubeconfig --name cluster-valhalla-kitchen
-      
+
       - name: Deploy to EKS
         run: |
           kubectl apply -f kubernets
+
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve
+        continue-on-error: true
 

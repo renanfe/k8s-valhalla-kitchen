@@ -6,10 +6,10 @@ on:
   pull_request:
     branches: [ "main" ]
 env:
-  AWS_REGION: us-east-1                       # set this to your preferred AWS region, e.g. us-west-1
-  ECR_REPOSITORY: api-valhalla-kitchen        # set this to your Amazon ECR repository name
-  ECS_CLUSTER: cluster-valhalla-kitchen       # set this to your Amazon ECS cluster name                                              # file, e.g. .aws/task-definition.json
-  CONTAINER_NAME: api-valhalla-kitchen        # set this to the name of the container in the
+  AWS_REGION: us-east-1                       
+  ECR_REPOSITORY: api-valhalla-kitchen        
+  ECS_CLUSTER: cluster-valhalla-kitchen       
+  CONTAINER_NAME: api-valhalla-kitchen        
                                               
 
 jobs:
@@ -85,10 +85,11 @@ jobs:
     
       - name: Update kube config
         run: aws eks update-kubeconfig --name cluster-valhalla-kitchen
+        continue-on-error: true
 
       - name: Deploy to EKS
         run: |
-          kubectl apply -f kubernets
+          kubectl apply -f ./kubernets
         continue-on-error: true
 
       - name: Terraform Destroy

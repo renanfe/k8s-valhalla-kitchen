@@ -75,7 +75,7 @@ jobs:
       - name: Create ECR repository
         env:
           REPO_NAME: api-valhalla-kitchen
-          REGION: us-eat-1
+          REGION: us-east-1
         run: |
           aws ecr create-repository --repository-name $REPO_NAME --region $REGION
 
@@ -89,7 +89,7 @@ jobs:
         env:
           REGISTRY: ${{ steps.login-ecr-aws.outputs.registry }}
           REPOSITORY: api-valhalla-kitchen
-          REGION: us-eat-1
+          REGION: us-east-1
           IMAGE_TAG: latest
         run: |
           docker build . -t $REGISTRY/$REPOSITORY:$IMAGE_TAG

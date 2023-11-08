@@ -4,6 +4,8 @@ metadata:
   name: api-valhalla-kitchen-deployment
 spec:
   replicas: 2
+  strategy:
+    type: RollingUpdate
   selector:
     matchLabels:
       app: api-valhalla-kitchen

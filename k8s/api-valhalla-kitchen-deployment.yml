@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: api-valhalla-kitchen-container
-          image: renanfee/api-valhalla-kitchen
+          image: 075131957861.dkr.ecr.us-east-1.amazonaws.com/api-valhalla-kitchen:latest
           ports:
             - containerPort: 8080
           env:

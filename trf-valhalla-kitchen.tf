@@ -2,6 +2,20 @@ provider "aws" {
   region = "us-east-1"
 }
 
+data "aws_eks_cluster" "default" {
+  name = module.cluster.cluster_id
+}
+
+data "aws_eks_cluster_auth" "default" {
+  name = module.cluster.cluster_id
+}
+
+provider "kubernetes" {
+  host                   = data.aws_eks_cluster.default.endpoint
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.default.certificate_authority[0].data)
+  token                  = data.aws_eks_cluster_auth.default.token
+}
+
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "5.1.2"

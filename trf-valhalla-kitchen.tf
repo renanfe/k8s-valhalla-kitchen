@@ -41,17 +41,6 @@ module "vpc" {
   }
 }
 
-resource "aws_security_group" "security_gropu" {
-  name_prefix = "sc"
-
-  ingress {
-    from_port   = 0
-    to_port     = 65535
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "17.1.0"
@@ -101,4 +90,15 @@ resource "aws_eks_node_group" "node_group" {
   }
 
   depends_on = [aws_iam_role_policy_attachment.policy]
+}
+
+resource "aws_security_group" "security_gropu" {
+  name_prefix = "sc"
+
+  ingress {
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }

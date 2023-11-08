@@ -54,21 +54,39 @@ module "eks" {
   
 }
 
+resource "aws_iam_role" "role" {
+  name = "eks-valhalla-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "eks.amazonaws.com"
+        }
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "policy" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
+  role       = aws_iam_role.role.name
+}
+
 resource "aws_eks_node_group" "node_group" {
-  cluster_name    = cluster-valhalla-kitchen
-  node_group_name = "group_cluster_valhalla_kitchen"
-  node_role_arn   = aws_iam_role.eks-nodegroup.arn
-  subnet_ids      = module.vpc.public_subnets
-  instance_types = ["t2.micro"]
+  cluster_name    = module.eks
+  node_group_name = "valhalla_node_group"
+  node_role_arn   = aws_iam_role.role.arn
+  subnet_ids      = [module.vpc.public_subnets]
 
   scaling_config {
     desired_size = 1
-    max_size     = 2
+    max_size     = 1
     min_size     = 1
   }
 
-  update_config {
-    max_unavailable = 1
-  }
-
+  depends_on = [aws_iam_role_policy_attachment.policy]
 }

@@ -44,7 +44,7 @@ module "vpc" {
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "18.31.2"
+  version = "17.1.0"
 
   cluster_name    = "cluster-valhalla-kitchen"
   cluster_version = "1.28"

@@ -33,33 +33,33 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      # - name: Setup Terraform
-      #   uses: hashicorp/setup-terraform@v2
-      #   with:
-      #     cli_config_credentials_token: 1.4.6
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          cli_config_credentials_token: 1.4.6
 
-      # - name: Terraform Init
-      #   id: init
-      #   run: terraform init
+      - name: Terraform Init
+        id: init
+        run: terraform init
       
-      # - name: Terraform Validate
-      #   id: validate
-      #   run: terraform validate -no-color
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
 
-      # - name: Terraform Plan
-      #   id: plan
-      #   if: github.event_name == 'pull_request'
-      #   run: terraform plan -no-color -input=false
-      #   continue-on-error: true
+      - name: Terraform Plan
+        id: plan
+        if: github.event_name == 'pull_request'
+        run: terraform plan -no-color -input=false
+        continue-on-error: true
 
-      # - name: Terraform Plan Status
-      #   if: steps.plan.outcome == 'failure'
-      #   run: exit 1
+      - name: Terraform Plan Status
+        if: steps.plan.outcome == 'failure'
+        run: exit 1
 
-      # - name: Terraform Apply
-      #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      #   run: terraform apply -auto-approve -input=false
-      #   continue-on-error: true
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: terraform apply -auto-approve -input=false
+        continue-on-error: true
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -81,7 +81,7 @@ jobs:
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
     
       - name: Update kube config
-        run: aws eks update-kubeconfig --name primuslearning
+        run: aws eks update-kubeconfig --name cluster-valhalla-kitchen
       
       - name: Deploy to EKS
         run: |

@@ -69,7 +69,7 @@ jobs:
         continue-on-error: true
 
       - name: Login to Amazon ECR
-        id: login-ecr
+        id: login-ecr-aws
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Create ECR repository
@@ -87,7 +87,7 @@ jobs:
     
       - name: Build, tag, and push docker image to Amazon ECR
         env:
-          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REGISTRY: ${{ steps.login-ecr-aws.outputs.registry }}
           REPOSITORY: api-valhalla-kitchen
           REGION: us-eat-1
           IMAGE_TAG: latest

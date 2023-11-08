@@ -92,7 +92,7 @@ jobs:
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
     
       - name: Update kube config
-        run: aws eks update-kubeconfig --name cluster-valhalla-kitchen
+        run: aws eks update-kubeconfig --name cluster-valhalla-kitchen --region us-east-1
         continue-on-error: true
 
       - name: Deploy to EKS

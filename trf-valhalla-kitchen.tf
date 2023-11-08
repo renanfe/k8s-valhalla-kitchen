@@ -57,7 +57,7 @@ module "eks" {
 resource "aws_eks_node_group" "node_group" {
   cluster_name    = cluster-valhalla-kitchen
   node_group_name = "group_cluster_valhalla_kitchen"
-  node_role_arn   = aws_iam_role.ec2_iam_role.arn
+  node_role_arn   = aws_iam_role.eks-nodegroup.arn
   subnet_ids      = module.vpc.public_subnets
   instance_types = ["t2.micro"]
 

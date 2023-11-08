@@ -28,7 +28,6 @@ module "vpc" {
   public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
 
   enable_nat_gateway = true
-  enable_vpn_gateway = true
 }
 
 module "eks" {
@@ -40,7 +39,7 @@ module "eks" {
   subnets         = module.vpc.public_subnets
   vpc_id          = module.vpc.vpc_id
 
-  node_groups = {
+/*   node_groups = {
     eks_nodes = {
       desired_capacity = 2
       max_capacity     = 10
@@ -48,11 +47,6 @@ module "eks" {
 
       instance_type = "m5.large"
       key_name      = "my-key"
-      
-      additional_tags = {
-        Environment = "test"
-        Name        = "eks-worker-node"
-      }
     }
-  }
+  } */
 }

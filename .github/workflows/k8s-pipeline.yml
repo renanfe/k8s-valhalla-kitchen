@@ -101,7 +101,8 @@ jobs:
           kubectl get nodes
           kubectl get deployments -A
         continue-on-error: true     
-
+        
+        #Remover recursos para não gerar custos $
       - name: Terraform Destroy
         run: terraform destroy -auto-approve
 

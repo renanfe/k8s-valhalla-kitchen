@@ -1,11 +1,5 @@
 # k8s-valhalla-kitchen
 
-Executar os seguintes comandas :
-
-Clonar o repositório utilizando o comando:
-
-<code>git clone https://github.com/caiolepetit/kubernets-valhalla-kitchen.git</code>
-
 Comandos Terraform
 
 <code>terraform init</code>

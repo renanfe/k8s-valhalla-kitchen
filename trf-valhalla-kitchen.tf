@@ -10,12 +10,6 @@ data "aws_eks_cluster_auth" "default" {
   name = module.eks.cluster_id
 }
 
-resource "random_string" "random_suffix" {
-  length  = 3
-  special = false
-  upper   = false
-}
-
 provider "kubernetes" {
   host                   = data.aws_eks_cluster.default.endpoint
   cluster_ca_certificate = base64decode(data.aws_eks_cluster.default.certificate_authority[0].data)
@@ -47,7 +41,7 @@ module "vpc" {
 }
 
 resource "aws_iam_role" "role" {
-  name = "EksValhallaKitchen-${random_string.random_suffix.result}"
+  name = "EksValhallaKitchen"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -70,6 +64,7 @@ module "eks" {
   cluster_name    = "cluster-valhalla-kitchen"
   cluster_version = "1.28"
 
+  manage_cluster_iam_resources= true
   cluster_iam_role_name = aws_iam_role.role.name
 
   subnets         = module.vpc.public_subnets

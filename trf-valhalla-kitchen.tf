@@ -10,6 +10,12 @@ data "aws_eks_cluster_auth" "default" {
   name = module.eks.cluster_id
 }
 
+resource "random_string" "random_suffix" {
+  length  = 3
+  special = false
+  upper   = false
+}
+
 provider "kubernetes" {
   host                   = data.aws_eks_cluster.default.endpoint
   cluster_ca_certificate = base64decode(data.aws_eks_cluster.default.certificate_authority[0].data)
@@ -41,7 +47,7 @@ module "vpc" {
 }
 
 resource "aws_iam_role" "role" {
-  name = "EksValhallaKitchen-${timestamp()}"
+  name = "EksValhallaKitchen-${random_string.random_suffix.result}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"

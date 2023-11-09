@@ -62,9 +62,6 @@ module "eks" {
   cluster_name    = "cluster-valhalla-kitchen"
   cluster_version = "1.28"
 
-  manage_cluster_iam_resources= true
-  cluster_iam_role_name = aws_iam_role.role.name
-
   subnets         = module.vpc.public_subnets
   vpc_id          = module.vpc.vpc_id
 

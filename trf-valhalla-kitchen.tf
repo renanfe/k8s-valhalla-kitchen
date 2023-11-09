@@ -41,22 +41,8 @@ module "vpc" {
   }
 }
 
-module "eks" {
-  source  = "terraform-aws-modules/eks/aws"
-  version = "17.1.0"
-
-  cluster_name    = "cluster-valhalla-kitchen"
-  cluster_version = "1.28"
-
-  cluster_iam_role_name = aws_iam_role.role.arn
-
-  subnets         = module.vpc.public_subnets
-  vpc_id          = module.vpc.vpc_id
-  
-}
-
 resource "aws_iam_role" "role" {
-  name = "eks-valhalla-role"
+  name = "EksValhallaKitchen"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -70,6 +56,20 @@ resource "aws_iam_role" "role" {
       }
     ]
   })
+}
+
+module "eks" {
+  source  = "terraform-aws-modules/eks/aws"
+  version = "17.1.0"
+
+  cluster_name    = "cluster-valhalla-kitchen"
+  cluster_version = "1.28"
+
+  cluster_iam_role_name = aws_iam_role.role.name
+
+  subnets         = module.vpc.public_subnets
+  vpc_id          = module.vpc.vpc_id
+  
 }
 
 resource "aws_iam_role_policy_attachment" "policy" {
@@ -90,15 +90,4 @@ resource "aws_eks_node_group" "node_group" {
   }
 
   depends_on = [aws_iam_role_policy_attachment.policy]
-}
-
-resource "aws_security_group" "security_gropu" {
-  name_prefix = "sc"
-
-  ingress {
-    from_port   = 0
-    to_port     = 65535
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
 }

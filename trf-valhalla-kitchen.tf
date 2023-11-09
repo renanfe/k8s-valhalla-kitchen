@@ -28,7 +28,6 @@ module "vpc" {
   public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
 
   enable_nat_gateway = true
-  enable_vpn_gateway = true
   enable_dns_hostnames = true
   public_subnet_tags = {
     "kubernetes.io/cluster/my_eks" = "shared"
@@ -69,12 +68,15 @@ module "eks" {
 
   subnets         = module.vpc.public_subnets
   vpc_id          = module.vpc.vpc_id
+
+  depends_on = [module.vpc]
   
 }
 
 resource "aws_iam_role_policy_attachment" "policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
   role       = aws_iam_role.role.name
+  depends_on = [aws_iam_role.role]
 }
 
 resource "aws_eks_node_group" "node_group" {
@@ -89,5 +91,5 @@ resource "aws_eks_node_group" "node_group" {
     min_size     = 1
   }
 
-  depends_on = [aws_iam_role_policy_attachment.policy]
+  depends_on = [aws_iam_role_policy_attachment.policy, module.eks]
 }
